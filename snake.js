@@ -49,6 +49,9 @@ export const DIRECTIONS: Directions = {
 let directions$ = keydown$
 	.map((event: KeyboardEvent) => DIRECTIONS[event.keyCode])
 	.filter(direction => !!direction)
+	.scan(nextDirection)
+	.startwith(INITIAL_DIRECTION)
+	.distinctUntilChanged();
 
 // Handler for navigation
 
@@ -63,4 +66,12 @@ export function nextDirection(previous, next) {
 
 	return next;
 }
-	
+
+// Define behaviour subject
+
+// SNAKE_LENGTH specifies the intial length of our SNAKE_LENGTH
+let length$ = new BehaviorSubject<number>(SNAKE_LENGTH);
+
+let snakeLength$ = length$
+	.scan((step, snakeLength) => snakeLength + step)
+	.share();
